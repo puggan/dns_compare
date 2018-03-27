@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 #
 # dns_compare.py - Compare the data in a BIND zone file to the data being returned
 #                  by an authoritative DNS server.
