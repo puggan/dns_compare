@@ -59,7 +59,7 @@ Verbose:
 	----
 	(MIS-MATCH) query: example.com. ...
 	Expected:  60 IN A 10.0.0.1
-	Got     :  60 IN A 10.0.0.20
+	Received:  60 IN A 10.0.0.20
 
 By default, SOA and NS records are ignored because these records are likely
 to change when migrating a zone between DNS services..  Specify `--soa` or `--ns` option,
