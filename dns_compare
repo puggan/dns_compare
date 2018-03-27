@@ -60,8 +60,8 @@ if __name__ == '__main__':
                         help="compare SOA records (default: false)")
     parser.add_option("-n","--ns", dest="compare_ns", action="store_true", default=False,
                         help="compare NS records (default: false)")
-    parser.add_option("-t","--ttl", dest="compare_ttl", action="store_false", default=True,
-                        help="compare TTL values (default: true)")
+    parser.add_option("-t","--ttl", dest="compare_ttl", action="store_false", default=False,
+                        help="compare TTL values (default: false)")
     (opts, remaining_args) = parser.parse_args()
 
     # check for required options, since optparse doesn't support required options

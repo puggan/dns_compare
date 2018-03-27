@@ -30,7 +30,7 @@ Example Usage:
 --------------
 Basic operation:
 
-    $ dns_compare -z example.com --file example.com.zone --server 10.1.1.1
+    $ dns_compare -z example.com --file example.com.zone --server 10.1.1.1 --ttl
     ............................................X
     (MIS-MATCH) query: nss4.example.com.
      Expected:  300 IN A 142.229.40.28
@@ -65,8 +65,7 @@ By default, SOA and NS records are ignored because these records are likely
 to change when migrating a zone between DNS services..  Specify `--soa` or `--ns` option,
 respectively, to enable checking of SOA and NS records.
 
-Comparing TTLs can be disabled with `-t` option. This is useful when transferring DNS to a provider
-that offers only specific TTL values.
+Comparing TTLs is disabled by default and can be enabled with `--ttl` option.
 
 TODO:
 -----
