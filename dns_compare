@@ -51,8 +51,8 @@ if __name__ == '__main__':
                         help="name of the domain we're checking (eg: domain.com)")
     parser.add_option("-f", "--file", dest="zonefile", metavar="FILE",
                         help="zone file to load records from")
-    parser.add_option("-s", "--server", dest="nameserver", metavar="HOST",
-                        help="DNS server to compare zone file against")
+    parser.add_option("-s", "--server", dest="nameserver", metavar="HOST", default="8.8.8.8",
+                        help="DNS server to compare zone file against, default google DNS 8.8.8.8")
     # optional ... options
     parser.add_option("-v", "--verbose", dest="verbose", action="store_true", default=False,
                         help="print detailed results of each action")
@@ -66,7 +66,7 @@ if __name__ == '__main__':
 
     # check for required options, since optparse doesn't support required options
     if opts.zone == None or opts.zonefile == None or opts.nameserver == None:
-        print "Error: required arguments: --zone, --file, --server (or --help)"
+        print "Error: required arguments: --zone, --file (or --help)"
         sys.exit(2)
 
     z = dns.zone.from_file(opts.zonefile, origin=opts.zone, relativize=False)
