@@ -25,7 +25,8 @@
 #   NOTE: use -v to get a very verbose view of each dns record as it is checked
 #
 # Author:
-#   joe miller, <joeym@joeym.net>, 12/16/2010
+#   joe miller, <joeym@joeym.net>, 12/16/2010, main author
+#   puggan sundragon, <puggan@spiro.se>, 2018-03-27, upgrades
 #
 
 from optparse import OptionParser
