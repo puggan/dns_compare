@@ -32,7 +32,6 @@
 from optparse import OptionParser
 
 import sys, socket
-from pprint import pprint
 
 try:
     import dns.resolver, dns.zone
@@ -81,9 +80,10 @@ if __name__ == '__main__':
         print("Error: could not resolve 'host' %s" % opts.nameserver)
         sys.exit(3)
 
-    matches=0
-    cnamematches=0
-    mismatches=0
+    matches = 0
+    cnamematches = 0
+    mismatches = 0
+    errors = 0
     for (name, rdataset) in z.iterate_rdatasets():
         if rdataset.rdtype == SOA and not opts.compare_soa:
             continue
@@ -91,6 +91,7 @@ if __name__ == '__main__':
             continue
 
         match = False
+        error = False
         result = None
         try:
             ans = r.query(name, rdataset.rdtype, rdataset.rdclass)
@@ -105,21 +106,28 @@ if __name__ == '__main__':
             pass
 
         if opts.lookup_cnames and match == False and result == None and rdataset.rdtype == dns.rdatatype.CNAME and rdataset.rdclass == dns.rdataclass.IN:
-            ans_a = r.query(name, dns.rdatatype.A, dns.rdataclass.IN)
-            result_a = ans_a.rrset.to_rdataset()
-            if ans_a != None:
-                ans_cname = r.query(rdataset[0].target, dns.rdatatype.A, dns.rdataclass.IN)
-                result_cname = ans_cname.rrset.to_rdataset()
-                print("----")
-                if result_cname == result_a:
-                    print("(%s) query: %s" % ("CName-Match", name))
-                    cnamematches += 1
-                else:
-                    print("(%s) query: %s" % ("MIS-Match", name))
-                    mismatches += 1
-                print("Expected: ", rdataset, ' (', result_cname, ')')
-                print("Received: ", result_a)
-                pass
+            try:
+                ans_a = r.query(name, dns.rdatatype.A, dns.rdataclass.IN)
+            except DNSException as exc:
+                error = exc
+            else:
+                result_a = ans_a.rrset.to_rdataset()
+                if ans_a != None:
+                    try:
+                        ans_cname = r.query(rdataset[0].target, dns.rdatatype.A, dns.rdataclass.IN)
+                    except DNSException as exc:
+                        error = exc
+                    else:
+                        result_cname = ans_cname.rrset.to_rdataset()
+                        print("----")
+                        if result_cname == result_a:
+                            print("(%s) query: %s" % ("CName-Match", name))
+                            cnamematches += 1
+                        else:
+                            print("(%s) query: %s" % ("MIS-Match", name))
+                            mismatches += 1
+                        print("Expected: ", rdataset, ' (', result_cname, ')')
+                        print("Received: ", result_a)
 
         if opts.verbose:
             description = 'Match' if match else 'MIS-MATCH'
@@ -139,6 +147,16 @@ if __name__ == '__main__':
                 sys.stdout.write('.')
                 sys.stdout.flush()
             matches += 1
+        elif error:
+            if not opts.verbose:
+                sys.stdout.write('E')
+                print("\n(ERROR) query: %s" % name)
+                print("Expected:")
+                print(rdataset)
+                print("Error: ")
+                print(error)
+                sys.stdout.flush()
+            errors += 1
         else:
             if not opts.verbose:
                 sys.stdout.write('X')
@@ -160,3 +178,4 @@ if __name__ == '__main__':
     if opts.lookup_cnames and cnamematches > 0:
         print("CName-matches: ", cnamematches)
     print("Mis-matches:   ", mismatches)
+    print("Errors:        ", errors)
