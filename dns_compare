@@ -126,8 +126,8 @@ if __name__ == '__main__':
                         else:
                             print("(%s) query: %s" % ("MIS-Match", name))
                             mismatches += 1
-                        print("Expected: ", rdataset, ' (', result_cname, ')')
-                        print("Received: ", result_a)
+                        print("Expected: " + str(rdataset) + ' (' + result_cname + ')')
+                        print("Received: " + str(result_a))
 
         if opts.verbose:
             description = 'Match' if match else 'MIS-MATCH'
@@ -139,8 +139,8 @@ if __name__ == '__main__':
                 print("Received: ")
                 print(result)
             else:
-                print("Expected: ", rdataset)
-                print("Received: ", result)
+                print("Expected: " + str(rdataset))
+                print("Received: " + str(result))
 
         if match:
             if not opts.verbose:
@@ -167,15 +167,15 @@ if __name__ == '__main__':
                     print("Received: ")
                     print(result)
                 else:
-                    print("Expected: ", rdataset)
-                    print("Received: ", result)
+                    print("Expected: " + str(rdataset))
+                    print("Received: " + str(result))
                 sys.stdout.flush()
             mismatches += 1
     print("done")
 
     print("\nResults:")
-    print("Matches:       ", matches)
+    print("Matches:       " + str(matches))
     if opts.lookup_cnames and cnamematches > 0:
-        print("CName-matches: ", cnamematches)
-    print("Mis-matches:   ", mismatches)
-    print("Errors:        ", errors)
+        print("CName-matches: " + cnamematches)
+    print("Mis-matches:   " + str(mismatches))
+    print("Errors:        " + str(errors))
